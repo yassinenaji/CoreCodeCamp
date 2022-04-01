@@ -3,6 +3,7 @@ using CoreCodeCamp.Data;
 using CoreCodeCamp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,14 +11,17 @@ using System.Threading.Tasks;
 namespace CoreCodeCamp.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class CampsController : ControllerBase
     {
         private readonly ICampRepository _campRepository;
         private readonly IMapper _mapper;
-        public CampsController(ICampRepository campRepository, IMapper mapper)
+        private readonly LinkGenerator _linkGenerator;
+        public CampsController(ICampRepository campRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
             this._campRepository = campRepository;
             this._mapper = mapper;
+            this._linkGenerator = linkGenerator;
 
         }
 
@@ -71,12 +75,12 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<CampModel[]>> SearchByDate(DateTime date,bool includeTalks)
+        public async Task<ActionResult<CampModel[]>> SearchByDate(DateTime date, bool includeTalks)
         {
             try
             {
-                var res = await _campRepository.GetAllCampsByEventDate(date,includeTalks);
-                if(!res.Any()) return NotFound(); 
+                var res = await _campRepository.GetAllCampsByEventDate(date, includeTalks);
+                if (!res.Any()) return NotFound();
                 return _mapper.Map<CampModel[]>(res);
             }
             catch (Exception)
@@ -84,9 +88,79 @@ namespace CoreCodeCamp.Controllers
 
                 throw;
             }
-            
-            
 
+
+
+        }
+
+        public async Task<ActionResult<CampModel>> Post(CampModel model)
+        {
+
+            try
+            {
+                var existingCamp = await _campRepository.GetCampAsync(model.Moniker);
+                if(existingCamp != null)
+                {
+                    return BadRequest("Moniker in use");
+                }
+                var location = _linkGenerator.GetPathByAction("GET","Camps",new {monkier = model.Moniker});
+
+                if (string.IsNullOrEmpty(location))
+                {
+                    return BadRequest("Could not use current moniker");
+                }
+                var camp=_mapper.Map<Camp>(model);
+                _campRepository.Add(camp);
+              if(  await _campRepository.SaveChangesAsync())
+                {
+                    //using the hard coded way and its not practicle to use
+                    return this.Created($"/api/camps/{camp.Moniker}",_mapper.Map<CampModel>(camp));
+                   //Using LinkGenerator to generate URI
+                  //  return _linkGenerator.
+                }
+      
+            }
+            catch (Exception)
+            {
+
+                  return this.StatusCode(StatusCodes.Status500InternalServerError, "DataBase Failure");
+                // throw;
+            }
+            return this.BadRequest();
+        }
+
+
+        [HttpPut("{moniker}")]
+        //In put method we put the entire obejct in the body to modify the old object
+        public  async Task<ActionResult<CampModel>> Put(string moniker,CampModel model)
+        {
+            try
+            {
+
+                var oldCamp = await _campRepository.GetCampAsync(moniker);
+                if (oldCamp == null) return NotFound($"Could not find camp with moniker of {moniker}");
+
+                _mapper.Map(model, oldCamp);
+                if(await _campRepository.SaveChangesAsync())
+                {
+                    return _mapper.Map<CampModel>(oldCamp);
+                }
+
+            }
+            catch (Exception)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "DataBase Failure");
+                // throw;
+            }
+            return this.BadRequest();
+
+        }
+
+        public async Task<ActionResult<CampModel>> Delete(string moniker)
+        {
+
+            return null;
         }
     }
 }
