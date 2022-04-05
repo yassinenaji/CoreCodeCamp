@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "/oADEzVLiyx3U2vw7uZhjQxJEOh07yLwDLB1NUN72U8AJFG93O0LrSaAWAecvSSZ8thD7kc7iUYGmXI+CHvxfw==",
+  "dgSpecHash": "4dUNy4Ngb2zTCcqesKH4QdRv0eVzGLxTXZNmpJQFPPDSHQDs9UohQyn803fsYbl4HXtCq0Hs4AtVHrsObkquwA==",
   "success": true,
   "projectFilePath": "D:\\5iir\\Stage PFE\\formation pluralsight.net core 3\\Building an API with ASP.NET Core\\CoreCodeCamp\\CoreCodeCamp\\CoreCodeCamp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yassi\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
     "C:\\Users\\yassi\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
+    "C:\\Users\\yassi\\.nuget\\packages\\microsoft.aspnetcore.mvc.versioning\\5.0.0\\microsoft.aspnetcore.mvc.versioning.5.0.0.nupkg.sha512",
     "C:\\Users\\yassi\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.0\\microsoft.bcl.asyncinterfaces.1.1.0.nupkg.sha512",
     "C:\\Users\\yassi\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",
     "C:\\Users\\yassi\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

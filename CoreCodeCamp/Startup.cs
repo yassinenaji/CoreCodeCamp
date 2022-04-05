@@ -30,8 +30,18 @@ namespace CoreCodeCamp
             services.AddDbContext<CampContext>();
             services.AddScoped<ICampRepository, CampRepository>();
             services.AddControllers();
+            //Versioning Api
+            services.AddApiVersioning(opt => {
+
+                opt.AssumeDefaultVersionWhenUnspecified=true;
+                opt.DefaultApiVersion = new ApiVersion(1,1);
+                opt.ReportApiVersions = true;
+
+            });
            // services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
 
         }
 

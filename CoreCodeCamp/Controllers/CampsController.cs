@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 namespace CoreCodeCamp.Controllers
 {
     [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [ApiController]
     public class CampsController : ControllerBase
     {
@@ -51,6 +53,7 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpGet("{moniker}")]
+        [MapToApiVersion("1.0")]
         //[HttpGet("{moniker:int}")] to ensure it matches both type and name
         public async Task<ActionResult<CampModel>> Get(string moniker)
         {
@@ -60,6 +63,30 @@ namespace CoreCodeCamp.Controllers
 
 
                 var results = await _campRepository.GetCampAsync(moniker);
+                if (results == null) return NotFound();
+                return _mapper.Map<CampModel>(results);
+
+
+
+
+            }
+            catch (Exception)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "DataBase Failure");
+            }
+        }
+
+        [HttpGet("{moniker}")]
+        [MapToApiVersion("1.1")]
+        public async Task<ActionResult<CampModel>> Get11(string moniker)
+        {
+
+            try
+            {
+
+
+                var results = await _campRepository.GetCampAsync(moniker,true);
                 if (results == null) return NotFound();
                 return _mapper.Map<CampModel>(results);
 
