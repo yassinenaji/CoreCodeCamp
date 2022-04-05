@@ -132,7 +132,7 @@ namespace CoreCodeCamp.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update Talk");
 
-                throw;
+               // throw;
             }
           //  return this.BadRequest();
 
@@ -140,7 +140,7 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async  Task<ActionResult<TalkModel>> Delete(string moniker,int id)
+        public async  Task<IActionResult> Delete(string moniker,int id)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace CoreCodeCamp.Controllers
             catch (System.Exception)
             {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update Talk");
+                return StatusCode(StatusCodes.Status500InternalServerError, "DataBase Failure");
             }
         }
 
