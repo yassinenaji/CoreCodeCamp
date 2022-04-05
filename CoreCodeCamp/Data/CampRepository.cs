@@ -108,6 +108,7 @@ namespace CoreCodeCamp.Data
       if (includeSpeakers)
       {
         query = query
+           //.Include(c=>c.Camp)
           .Include(t => t.Speaker);
       }
 
